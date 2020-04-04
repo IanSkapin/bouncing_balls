@@ -1,7 +1,6 @@
 """
 
 """
-from pyglet.clock import heappush
 from . import resources
 from .physics import PhysicalObject, INFINITY
 from .resources import black_ball_image
@@ -53,11 +52,22 @@ class Ball(PhysicalObject):
         self.collisions += 1
         self.velocity_y = -self.velocity_y
 
-    def predict(self, time: float, pq: list, balls: list):
+    def predict(self, time: float, balls: list):
+        """Predict collisions for this object with the given objects and walls
+
+        Args:
+            time: current time used to calculate the time of the next collision
+            balls: list of objects to check for collisions
+
+        Returns: list of all the possible next collisions
+
+        """
+        new_collisions = []
         for ball in balls:
-            if dt := self.time_to_hit(ball):
-                heappush(pq, Collision(time=time + dt, obj1=self, obj2=ball, balls=balls, pq=pq))
-        if dt := self.time_to_hit_vertical_wall():
-            heappush(pq, Collision(time + dt,   obj1=self, obj2=None, balls=balls, pq=pq))
-        if dt := self.time_to_hit_horizontal_wall():
-            heappush(pq, Collision(time + dt, obj1=None, obj2=self, balls=balls, pq=pq))
+            if 0 < (dt := self.time_to_hit(ball)):
+                new_collisions.append(Collision(timestamp=time + dt, obj1=self, obj2=ball))
+        if 0 < (dt := self.time_to_hit_vertical_wall()):
+            new_collisions.append(Collision(timestamp=time + dt,   obj1=self, obj2=None))
+        if 0 < (dt := self.time_to_hit_horizontal_wall()):
+            new_collisions.append(Collision(timestamp=time + dt, obj1=None, obj2=self))
+        return new_collisions

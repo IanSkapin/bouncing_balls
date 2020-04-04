@@ -4,7 +4,7 @@ import pyglet
 
 from src import resources
 
-INFINITY = None
+INFINITY = -1
 
 
 class PhysicalObject(pyglet.sprite.Sprite):
