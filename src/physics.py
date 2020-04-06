@@ -15,7 +15,7 @@ class PhysicalObject(pyglet.sprite.Sprite):
         super().__init__(*args, **kwargs)
         self.event_handlers = []
         self.collisions = 0
-        self.scale = self.mass * 0.25
+        self.scale = self.mass * 0.25 + 0.2
         # self.scale = kwargs.pop('scale', 0.25)
 
     @property

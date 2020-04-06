@@ -56,13 +56,15 @@ if __name__ == '__main__':
     balls = []
     # initialize all the balls
     for i in range(int(sys.argv[1])):
-        balls.append(Ball(x=random.randint(50, resources.WIDTH - 50),
-                          y=random.randint(50, resources.HEIGHT - 50),
-                          velocity_x=(random.random() - 0.5) * int(sys.argv[2]),
-                          velocity_y=(random.random() - 0.5) * int(sys.argv[2]),
+        balls.append(Ball(x=random.randint(10, resources.WIDTH - 10),
+                          y=random.randint(10, resources.HEIGHT - 0),
+                          velocity_x=random.random() - 0.5,
+                          velocity_y=random.random() - 0.5,
                           batch=main_batch,
                           mass=random.random()))
-    balls.append(Ball(x=100, y=100, velocity_y=400, velocity_x=400, batch=main_batch, mass=4))
+    balls.append(Ball(x=100, y=100,
+                      velocity_y=int(sys.argv[2]), velocity_x=int(sys.argv[2]),
+                      batch=main_batch, mass=4))
     # initialize the priority queue
     for ball in balls:
         [heapq.heappush(pq, col) for col in ball.predict(time=0, balls=balls)]
