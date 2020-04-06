@@ -37,8 +37,10 @@ def update(dt, pq, t):
      Update all the objects not involved in collisions as well.
     """
     ta, tb = t.new_dt(dt)
-    while pq and pq[0].next_ts <= tb:
+    while pq and pq[0].next_ts < tb:
         collision = heapq.heappop(pq)
+        if not collision.is_valid():
+            continue
         dt_a = collision.next_ts - ta
         for o in balls:
             o.update(dt_a)
@@ -60,11 +62,12 @@ if __name__ == '__main__':
                           velocity_y=(random.random() - 0.5) * int(sys.argv[2]),
                           batch=main_batch,
                           mass=random.random()))
+    balls.append(Ball(x=100, y=100, velocity_y=400, velocity_x=400, batch=main_batch, mass=4))
     # initialize the priority queue
     for ball in balls:
         [heapq.heappush(pq, col) for col in ball.predict(time=0, balls=balls)]
 
     t = TimeElapsed()
     # regular interval draws
-    pyglet.clock.schedule_interval(update, 1/120.0, pq=pq, t=t)
+    pyglet.clock.schedule_interval(update, 1/60.0, pq=pq, t=t)
     pyglet.app.run()
